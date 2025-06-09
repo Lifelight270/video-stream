@@ -9,7 +9,7 @@ const Video = () => {
 
   const fetchVideos = async () => {
     try {
-      const res = await axios.get("https://video-stream-yng0.onrender.com/videos");
+      const res = await axios.get("http://localhost:3000/videos");
       setVideos(res.data);
     } catch (error) {
       console.error("Error fetching videos:", error);
@@ -29,7 +29,7 @@ const Video = () => {
 
     try {
       setUploading(true);
-      await axios.post("https://video-stream-yng0.onrender.com/upload", formData);
+      await axios.post("http://localhost:3000/upload", formData);
       setUploading(false);
       setFile(null);
       await fetchVideos();
@@ -40,57 +40,63 @@ const Video = () => {
   };
 
   return (
-    <div className="p-6 md:p-12 bg-gradient-to-b from-blue-50 to-white min-h-screen font-sans">
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-xl">
-        <h1 className="text-3xl font-bold mb-4 text-center text-blue-700">
-          🎥 MongoDB Video Gallery
-        </h1>
+    <div className="min-h-screen bg-gray-100 px-4 py-6 md:px-12 font-sans">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-blue-700">YouTube Clone 🎥</h1>
 
-        {/* Upload form */}
-        <form
-          onSubmit={handleUpload}
-          className="flex flex-col md:flex-row items-center gap-4 mb-6">
-          <input
-            type="file"
-            accept="video/mp4"
-            onChange={(e) => setFile(e.target.files[0])}
-            className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
-          />
-          <button
-            type="submit"
-            disabled={uploading}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded disabled:opacity-50">
-            {uploading ? "Uploading..." : "Upload Video"}
-          </button>
-        </form>
+          <form onSubmit={handleUpload} className="flex items-center space-x-3">
+            <input
+              type="file"
+              accept="video/mp4"
+              onChange={(e) => setFile(e.target.files[0])}
+              className="file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
+            />
+            <button
+              type="submit"
+              disabled={uploading}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded disabled:opacity-50">
+              {uploading ? "Uploading..." : "Upload"}
+            </button>
+          </form>
+        </div>
 
-        {/* Video list */}
-        <div className="space-y-3">
+        {/* Video grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {videos.length === 0 ? (
-            <p className="text-gray-500 text-center">No videos uploaded yet.</p>
+            <p className="col-span-full text-center text-gray-500">
+              No videos uploaded yet.
+            </p>
           ) : (
             videos.map((video) => (
-              <button
+              <div
                 key={video._id}
-                onClick={() => setSelectedId(video._id)}
-                className="w-full text-left p-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg shadow-sm transition">
-                🎬 {video.filename}
-              </button>
+                className="bg-white rounded-lg overflow-hidden shadow hover:shadow-md transition"
+                onClick={() => setSelectedId(video._id)}>
+                <div className="bg-black aspect-video flex items-center justify-center text-white text-sm">
+                  🎬 {video.filename.slice(0, 30)}...
+                </div>
+                <div className="p-3">
+                  <p className="text-gray-800 font-semibold text-sm truncate">
+                    {video.filename}
+                  </p>
+                </div>
+              </div>
             ))
           )}
         </div>
 
-        {/* Video Player */}
+        {/* Video player */}
         {selectedId && (
-          <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-2 text-gray-800">
-              📺 Now Playing
+          <div className="mt-10">
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              Now Playing:
             </h2>
             <video
               controls
-              width="100%"
-              className="rounded-lg border border-gray-300 shadow-sm"
-              src={`https://video-stream-yng0.onrender.com/video/${selectedId}`}
+              className="w-full rounded-xl shadow-md border"
+              src={`http://localhost:3000/video/${selectedId}`}
               preload="metadata"
             />
           </div>
