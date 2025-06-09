@@ -5,14 +5,14 @@ const { MongoClient, ObjectId, GridFSBucket } = require("mongodb");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
-
+require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // const mongoURI = "mongodb://localhost:27017";
-const dbName = "videoDB";
-const mongoURI = `mongodb+srv://lightlife908:lifelight0011@cluster0.3dnyipx.mongodb.net/${dbName}?retryWrites=true&w=majority&appName=Cluster0`;
+// const dbName = process.env.dbName;
+const mongoURI = process.env.MONGO_URI;
 let bucket;
 
 // Connect to MongoDB
