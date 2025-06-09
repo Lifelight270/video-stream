@@ -9,7 +9,7 @@ const Video = () => {
 
   const fetchVideos = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/videos");
+      const res = await axios.get("https://video-stream-yng0.onrender.com/videos");
       setVideos(res.data);
     } catch (error) {
       console.error("Error fetching videos:", error);
@@ -29,7 +29,7 @@ const Video = () => {
 
     try {
       setUploading(true);
-      await axios.post("http://localhost:3000/upload", formData);
+      await axios.post("https://video-stream-yng0.onrender.com/upload", formData);
       setUploading(false);
       setFile(null);
       await fetchVideos();
@@ -90,7 +90,7 @@ const Video = () => {
               controls
               width="100%"
               className="rounded-lg border border-gray-300 shadow-sm"
-              src={`http://localhost:3000/video/${selectedId}`}
+              src={`https://video-stream-yng0.onrender.com/video/${selectedId}`}
               preload="metadata"
             />
           </div>
